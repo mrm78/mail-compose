@@ -23,6 +23,10 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /etc/letsencrypt:/etc/letsencrypt/
     restart: always
+    networks:
+      default:
+        aliases:
+          - ${OVERRIDE_HOSTNAME}
     stop_grace_period: 1m
     # Uncomment if using `ENABLE_FAIL2BAN=1`:
     # cap_add:
@@ -36,8 +40,8 @@ services:
     image: roundcube/roundcubemail
     container_name: rcube
     environment:
-      - ROUNDCUBEMAIL_DEFAULT_HOST=tls://mailserver
-      - ROUNDCUBEMAIL_SMTP_SERVER=tls://mailserver
+      - ROUNDCUBEMAIL_DEFAULT_HOST=tls://${OVERRIDE_HOSTNAME}
+      - ROUNDCUBEMAIL_SMTP_SERVER=tls://${OVERRIDE_HOSTNAME}
     ports:
       - "8787:80"
     restart: always
